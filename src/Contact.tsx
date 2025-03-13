@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 export function Contact() {
   const [category, setCategory] = useState('')
@@ -77,22 +77,47 @@ export function Contact() {
   );
 }
 
+
+
 export function Footer() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    handleResize(); // Check on first render
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <footer className="bg-gray-100 p-4 flex justify-between items-center text-gray-700 text-sm">
-      <div className="flex items-center space-x-4">
-        <span className="flex items-center">
-          📍 Locations
-        </span>
-        <span>Disclaimer</span>
-        <span>Design & Trademarks</span>
-        <span>Copyright & Customer Satisfaction</span>
-        <span>Entire Refunds Policy</span>
+    <footer className="bg-gray-100 p-3 sm:p-4 flex flex-wrap justify-center sm:justify-between items-center text-gray-700 text-xs sm:text-sm md:text-base">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 max-w-full">
+        {isMobile ? (
+          <>
+            <span className="truncate max-w-[80px]">📍 Locations</span>
+            <span className="truncate max-w-[80px]">Terms</span>
+            <span className="truncate max-w-[100px]">Refunds</span>
+          </>
+        ) : (
+          <>
+            <span className="flex items-center">📍 Locations</span>
+            <span>Disclaimer</span>
+            <span>Design & Trademarks</span>
+            <span>Copyright & Customer Satisfaction</span>
+            <span>Entire Refunds Policy</span>
+          </>
+        )}
       </div>
-      <div className="flex items-center space-x-2">
-        <span>Connect &nbsp; with</span>
+      <div className="flex items-center gap-2 mt-2 sm:mt-0">
+        <span className="truncate max-w-[100px] sm:max-w-none">
+          Connect with
+        </span>
         <span className="font-bold">bitlife</span>
       </div>
     </footer>
   );
 }
+
+
+
+
