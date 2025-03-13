@@ -77,19 +77,26 @@ export function Contact() {
   );
 }
 
-
-
 export function Footer() {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 970);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    handleResize(); // Check on first render
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const mediaQuery = window.matchMedia("(max-width: 640px)");
+
+    // Function to update state based on media query
+    const handleResize = () => setIsMobile(mediaQuery.matches);
+
+    // Set initial state
+    handleResize();
+
+    // Add listener for changes
+    mediaQuery.addEventListener("change", handleResize);
+
+    return () => mediaQuery.removeEventListener("change", handleResize);
   }, []);
 
   return (
+    <div className="footerr">
     <footer className="bg-gray-100 p-3 sm:p-4 flex flex-wrap justify-center sm:justify-between items-center text-gray-700 text-xs sm:text-sm md:text-base">
       <div className="flex flex-wrap justify-center gap-2 sm:gap-4 max-w-full">
         {isMobile ? (
@@ -108,13 +115,14 @@ export function Footer() {
           </>
         )}
       </div>
-      <div className="flex items-center gap-2 mt-2 sm:mt-0">
-        <span className="truncate max-w-[100px] sm:max-w-none">
-          Connect with
-        </span>
+      {/* Fix alignment for "Connect with bitlife" */}
+      <div className="flex items-center gap-1 sm:gap-4 whitespace-nowrap" style={isMobile?{"padding":"10px"}:{}}>
+        <span>Connect with</span>
         <span className="font-bold">bitlife</span>
       </div>
     </footer>
+  </div>
+  
   );
 }
 
