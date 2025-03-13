@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 export function Contact() {
   const [category, setCategory] = useState('')
@@ -78,21 +78,54 @@ export function Contact() {
 }
 
 export function Footer() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 970);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 640px)");
+
+    // Function to update state based on media query
+    const handleResize = () => setIsMobile(mediaQuery.matches);
+
+    // Set initial state
+    handleResize();
+
+    // Add listener for changes
+    mediaQuery.addEventListener("change", handleResize);
+
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, []);
+
   return (
-    <footer className="bg-gray-100 p-4 flex justify-between items-center text-gray-700 text-sm">
-      <div className="flex items-center space-x-4">
-        <span className="flex items-center">
-          📍 Locations
-        </span>
-        <span>Disclaimer</span>
-        <span>Design & Trademarks</span>
-        <span>Copyright & Customer Satisfaction</span>
-        <span>Entire Refunds Policy</span>
+    <div className="footerr">
+    <footer className="bg-gray-100 p-3 sm:p-4 flex flex-wrap justify-center sm:justify-between items-center text-gray-700 text-xs sm:text-sm md:text-base">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 max-w-full">
+        {isMobile ? (
+          <>
+            <span className="truncate max-w-[80px]">📍 Locations</span>
+            <span className="truncate max-w-[80px]">Terms</span>
+            <span className="truncate max-w-[100px]">Refunds</span>
+          </>
+        ) : (
+          <>
+            <span className="flex items-center">📍 Locations</span>
+            <span>Disclaimer</span>
+            <span>Design & Trademarks</span>
+            <span>Copyright & Customer Satisfaction</span>
+            <span>Entire Refunds Policy</span>
+          </>
+        )}
       </div>
-      <div className="flex items-center space-x-2">
-        <span>Connect &nbsp; with</span>
+      {/* Fix alignment for "Connect with bitlife" */}
+      <div className="flex items-center gap-1 sm:gap-4 whitespace-nowrap" style={isMobile?{"padding":"10px"}:{}}>
+        <span>Connect with</span>
         <span className="font-bold">bitlife</span>
       </div>
     </footer>
+  </div>
+  
   );
 }
+
+
+
+
